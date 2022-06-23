@@ -13,6 +13,7 @@ Html, JavaScript, Gulp, Node, scss
 Затем в консоли пропишите:
 
 ```bash
+cd gulp
 npm i
 ```
 
