@@ -1,23 +1,22 @@
 //* ###### Главный Scss-файл ######
 
 //? ====== Переменные =============================
-@import '_base.scss';
+@import 'base';
 
 //? ====== Обнуление стилей =======================
-@import '_reset.scss';
+@import 'reset';
 
 //? ====== Oбщие параметры ========================
-@import '_site.scss';
+@import 'site';
 
 //? ===== Оcновная сетка ==========================
-@import '_grid.scss';
+@import 'grid';
 
 //? ====== Oбщие стили ============================
 @import 'interface/header'; // Шапка сайта
 @import 'interface/footer'; // Подвал сайта
 
-@import 'interface/_button.scss'; // Общии стили кнопок
-@import 'interface/_form.scss'; // Общии стили форм
-@import 'interface/_popup.scss'; // Общии стили всплывашек
+@import 'interface/button'; // Общии стили кнопок
+@import 'interface/popup'; // Общии стили всплывашек
 
 //? ====== Блоки и страницы ======================
