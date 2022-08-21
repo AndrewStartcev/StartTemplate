@@ -8,8 +8,10 @@ const imagemin = require("gulp-imagemin");
 const fileinclude = require("gulp-file-include");
 const htmlhint = require("gulp-htmlhint");
 const htmlbeautify = require("gulp-html-beautify");
+const plumber = require('gulp-plumber')
+const pug = require('gulp-pug')
+const pugLinter = require('gulp-pug-linter')
 
-// В слежении: Запуск локального сервера
 function browsersync() {
     browserSync.init({
         server: {
@@ -17,8 +19,13 @@ function browsersync() {
         },
     });
 }
-
-// В слежении: scss + autprefix > css
+function pug2html() {
+    return src('../app/pages/*.pug')
+        .pipe(plumber())
+        .pipe(pugLinter({ reporter: 'default' }))
+        .pipe(pug({ pretty: { beautifyHtml: true } }))
+        .pipe(dest('../dist'))
+}
 function styles() {
     return src("../app/scss/style.scss")
         .pipe(scss({ outputStyle: "compressed" }))
@@ -32,7 +39,6 @@ function styles() {
         .pipe(dest("../dist/assets/css"))
         .pipe(browserSync.stream());
 }
-
 function stylesVendor() {
     return src("../app/assets/library/**/*.css")
         .pipe(scss({ outputStyle: "compressed" }))
@@ -40,8 +46,6 @@ function stylesVendor() {
         .pipe(dest("../dist/assets/library"))
         .pipe(browserSync.stream());
 }
-
-// В слежении: Настройка fileinclude
 function htmlRun() {
     const options = {
         indent_size: 2,
@@ -58,18 +62,14 @@ function htmlRun() {
         .pipe(htmlbeautify(options))
         .pipe(dest("../dist"));
 }
-
-// В слежении: js > js.min
 function scripts() {
     return src(["../app/assets/js/main.js"]).pipe(concat("main.min.js")).pipe(uglify()).pipe(dest("../dist/assets/js")).pipe(browserSync.stream());
 }
 function scriptsVendor() {
     return src(["../app/assets/library/**/*"]).pipe(concat("vendor.min.js")).pipe(uglify()).pipe(dest("../dist/assets/library")).pipe(browserSync.stream());
 }
-
-// В слежении: Оптимизация картинок
 function images() {
-    return src("../app/assets/img/**/*")
+    return src("../app/assets/img/**/*.{gif,png,jpg,svg,webp}")
         .pipe(
             imagemin([
                 imagemin.gifsicle({ interlaced: true }),
@@ -80,10 +80,8 @@ function images() {
                 }),
             ])
         )
-        .pipe(dest("../dist/assets/img"));
+        .pipe(dest("../dist/assets/img/"));
 }
-
-// В Билде: Удаляем старую папку dist
 function cleanDist() {
     return del("../dist");
 }
@@ -93,8 +91,6 @@ function watchingFonts() {
 function watchingPhp() {
     return src(["../app/assets/php/**/*"]).pipe(dest("../dist/assets/php"));
 }
-
-// В слежении: Следим за изменением файлов в этих папках
 function watching() {
     watch(["../app/assets/fonts/**/*"], watchingFonts);
     watch([".../app/assets/php/**/*"], watchingPhp);
@@ -102,9 +98,11 @@ function watching() {
     watch(["../app/assets/library/**/*.css"], stylesVendor);
     watch(["../app/assets/img/**/*"], images);
     watch(["../app/**/*.html"], htmlRun);
+    watch(["../app/**/*.pug"], pug2html);
     watch(["../app/assets/js/*.js"], scripts);
     watch(["../app/assets/library/**/*.js"], scriptsVendor);
-    watch(["../app/**/*.html"]).on("change", browserSync.reload);
+    watch(["../app/assets/img/**/*"]).on("change", browserSync.reload);
+    watch(["../dist/**/*.html"]).on("change", browserSync.reload);
 }
 
 exports.browsersync = browsersync;
@@ -116,8 +114,8 @@ exports.scriptsVendor = scriptsVendor;
 exports.images = images;
 exports.watching = watching;
 exports.cleanDist = cleanDist;
+exports.pug2html = pug2html
 
-// gulp Запускаем работу галпа.
 exports.default = parallel(
     styles,
     stylesVendor,
@@ -126,5 +124,9 @@ exports.default = parallel(
     watchingFonts,
     htmlRun,
     watching,
+    pug2html,
     browsersync
+);
+exports.css = parallel(
+    styles,
 );

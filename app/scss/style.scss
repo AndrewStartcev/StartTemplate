@@ -1,22 +1,17 @@
-//* ###### Главный Scss-файл ######
+@import 'utils/variables';
+@import 'mixins/media';
 
-//? ====== Переменные =============================
-@import 'base';
+@import 'common/global';
 
-//? ====== Обнуление стилей =======================
-@import 'reset';
+@import 'common/buttons';
 
-//? ====== Oбщие параметры ========================
-@import 'site';
+@import 'common/text';
 
-//? ===== Оcновная сетка ==========================
-@import 'grid';
+@import 'common/header';
 
-//? ====== Oбщие стили ============================
-@import 'interface/header'; // Шапка сайта
-@import 'interface/footer'; // Подвал сайта
+@import 'common/popup';
 
-@import 'interface/button'; // Общии стили кнопок
-@import 'interface/popup'; // Общии стили всплывашек
+@import 'common/footer';
 
-//? ====== Блоки и страницы ======================
+// Страницы и блоки
+@import 'pages/index/01-main';
