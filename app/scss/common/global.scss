@@ -66,7 +66,7 @@ textarea {
 		outline: none;
 		border: 1px solid #c41de5;
 	}
-	@include media-mobile-min {
+	@include media-mobile {
 		font-size: 16px;
 		padding: 14px 18px;
 	}
@@ -82,7 +82,7 @@ input[type='submit'] {
 	width: 100%;
 	padding: 15px;
 	font-size: 18px;
-	@include media-mobile-min {
+	@include media-mobile {
 		font-size: 16px;
 	}
 }
